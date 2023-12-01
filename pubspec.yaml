@@ -1,0 +1,33 @@
+name: flutter_google_places_2
+description: Google places autocomplete widgets for flutter.
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_api_headers: ^3.3.0
+  http: ^1.1.2
+  rxdart: ^0.27.7
+  rxdart_ext: ^0.2.9
+  listenable_stream: ^1.1.0
+  collection: ^1.18.0
+  flutter_bloc_pattern: ^2.3.0
+  json_annotation: ^4.8.1
+  meta: ^1.10.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.7
+  json_serializable: ^6.7.1
+
+flutter:
+  assets:
+    - packages/flutter_google_places_2/assets/google_black.png
+    - packages/flutter_google_places_2/assets/google_white.png

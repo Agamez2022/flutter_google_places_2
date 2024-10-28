@@ -158,7 +158,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final TextStyle? resultTextStyle;
 
   PlacesAutocompleteWidget(
-      {Key? key,
+      {super.key,
       required this.apiKey,
       this.mode = Mode.fullscreen,
       this.hint = 'Search',
@@ -185,8 +185,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
       this.textDecoration,
       this.textStyle,
       this.cursorColor,
-      this.resultTextStyle})
-      : super(key: key) {
+      this.resultTextStyle}) {
     if (apiKey == null && proxyBaseUrl == null) {
       throw ArgumentError(
           'One of `apiKey` and `proxyBaseUrl` fields is required');
@@ -385,8 +384,10 @@ class PlacesAutocompleteResult extends StatelessWidget {
   final TextStyle? resultTextStyle;
 
   const PlacesAutocompleteResult(
-      {Key? key, required this.onTap, required this.logo, this.resultTextStyle})
-      : super(key: key);
+      {super.key,
+      required this.onTap,
+      required this.logo,
+      this.resultTextStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -423,11 +424,11 @@ class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
   final Color? cursorColor;
 
   const AppBarPlacesAutoCompleteTextField({
-    Key? key,
+    super.key,
     required this.textDecoration,
     required this.textStyle,
     required this.cursorColor,
-  }) : super(key: key);
+  });
 
   @override
   State<AppBarPlacesAutoCompleteTextField> createState() =>
@@ -486,7 +487,7 @@ class PoweredByGoogleImage extends StatelessWidget {
   final _poweredByGoogleBlack =
       'packages/flutter_google_places_2/assets/google_black.png';
 
-  const PoweredByGoogleImage({Key? key}) : super(key: key);
+  const PoweredByGoogleImage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -509,11 +510,10 @@ class PredictionsListView extends StatelessWidget {
   final TextStyle? resultTextStyle;
 
   const PredictionsListView(
-      {Key? key,
+      {super.key,
       required this.predictions,
       required this.onTap,
-      this.resultTextStyle})
-      : super(key: key);
+      this.resultTextStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -535,11 +535,10 @@ class PredictionTile extends StatelessWidget {
   final TextStyle? resultTextStyle;
 
   const PredictionTile(
-      {Key? key,
+      {super.key,
       required this.prediction,
       required this.onTap,
-      this.resultTextStyle})
-      : super(key: key);
+      this.resultTextStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -594,7 +593,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     }());
 
     return Rx.using(
-      () => GoogleMapsPlaces(
+      resourceFactory: () => GoogleMapsPlaces(
         apiKey: widget.apiKey,
         baseUrl: widget.proxyBaseUrl,
         httpClient: widget.httpClient,
@@ -603,9 +602,9 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
           ...?widget.headers,
         },
       ),
-      (GoogleMapsPlaces places) =>
+      streamFactory: (GoogleMapsPlaces places) =>
           Rx.never<GoogleMapsPlaces>().startWith(places),
-      (GoogleMapsPlaces places) {
+      disposer: (GoogleMapsPlaces places) {
         assert(() {
           debugPrint('[flutter_google_places_2] disposed');
           return true;

@@ -1,3 +1,4 @@
-//library google_maps_webservice_2.places;
-
-export 'src/google_maps_webservice/places.dart';
+// Transition import: exports Places API (New) types only.
+export 'src/places_client.dart';
+export 'src/places_models.dart';
+export 'src/places_requests.dart';

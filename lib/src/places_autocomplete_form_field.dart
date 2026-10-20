@@ -1,121 +1,78 @@
 import 'package:flutter/material.dart';
 
-import 'google_maps_webservice/places.dart';
-
+import 'places_client.dart';
+import 'places_models.dart';
+import 'places_requests.dart';
 import 'flutter_google_places.dart';
 import 'places_autocomplete_field.dart';
 
-/// A [FormField] that contains a [PlacesAutocompleteField].
-///
-/// This is a convenience widget that wraps a [PlacesAutocompleteField] widget in a
-/// [FormField].
-///
-/// A [Form] ancestor is not required. The [Form] simply makes it easier to
-/// save, reset, or validate multiple fields at once. To use without a [Form],
-/// pass a [GlobalKey] to the constructor and use [GlobalKey.currentState] to
-/// save or reset the form field.
-///
-/// When a [controller] is specified, its [TextEditingController.text]
-/// defines the [initialValue]. If this [FormField] is part of a scrolling
-/// container that lazily constructs its children, like a [ListView] or a
-/// [CustomScrollView], then a [controller] should be specified.
-/// The controller's lifetime should be managed by a stateful widget ancestor
-/// of the scrolling container.
-///
-/// If a [controller] is not specified, [initialValue] can be used to give
-/// the automatically generated controller an initial value.
-///
-/// For a documentation about the various parameters, see [PlacesAutocompleteField].
-///
-/// See also:
-///
-///  * [PlacesAutocompleteField], which is the underlying widget without the [Form]
-///    integration.
-///  * [InputDecorator], which shows the labels and other visual elements that
-///    surround the actual text editing widget.
+/// A FormField backed by the unchanged field presentation and Places New.
 class PlacesAutocompleteFormField extends FormField<String> {
-  /// Creates a [FormField] that contains a [PlacesAutocompleteField].
-  ///
-  /// When a [controller] is specified, [initialValue] must be null (the
-  /// default). If [controller] is null, then a [TextEditingController]
-  /// will be constructed automatically and its `text` will be initialized
-  /// to [initalValue] or the empty string.
-  ///
-  /// For documentation about the various parameters, see the [PlacesAutocompleteField] class
-  /// and [PlacesAutocompleteField], the constructor.
+  final TextEditingController? controller;
+  final PlacesClient client;
   PlacesAutocompleteFormField({
     super.key,
-    required String? apiKey,
+    required this.client,
     this.controller,
-    Icon? leading,
     String? initialValue,
+    Icon? leading,
     String? hint = 'Search',
     Icon? trailing,
     VoidCallback? trailingOnTap,
     Mode mode = Mode.fullscreen,
-    num? offset,
-    Location? location,
-    num? radius,
-    String? language,
+    int? inputOffset,
+    PlacesArea? locationBias,
+    PlacesArea? locationRestriction,
+    PlaceLocation? origin,
+    String? languageCode,
+    String? regionCode,
     String? sessionToken,
-    List<String>? types,
-    List<Component>? components,
-    bool? strictbounds,
-    ValueChanged<PlacesAutocompleteResponse>? onError,
+    List<String> includedPrimaryTypes = const [],
+    List<String> includedRegionCodes = const [],
+    ValueChanged<PlaceSelection>? onSelected,
+    ValueChanged<PlacesApiException>? onError,
     InputDecoration? inputDecoration = const InputDecoration(),
-    AutovalidateMode super.autovalidateMode = AutovalidateMode.disabled,
-    super.onSaved,
-    super.validator,
-    Map<String, String>? headers,
     BorderRadius? overlayBorderRadius,
     TextStyle? textStyle,
     TextStyle? textStyleFormField,
+    AutovalidateMode super.autovalidateMode = AutovalidateMode.disabled,
+    super.onSaved,
+    super.validator,
   }) : assert(initialValue == null || controller == null),
        super(
-         initialValue: controller != null
-             ? controller.text
-             : (initialValue ?? ''),
-         builder: (FormFieldState<String> field) {
+         initialValue: controller?.text ?? initialValue ?? '',
+         builder: (field) {
            final state = field as _TextFormFieldState;
-           final effectiveDecoration = inputDecoration?.applyDefaults(
+           final decoration = inputDecoration?.applyDefaults(
              Theme.of(state.context).inputDecorationTheme,
            );
            return PlacesAutocompleteField(
-             key: key,
-             inputDecoration: effectiveDecoration?.copyWith(
-               errorText: state.errorText,
-             ),
+             client: client,
              controller: state._effectiveController,
-             apiKey: apiKey,
-             leading: leading,
-             trailing: trailing,
-             offset: offset,
-             trailingOnTap: trailingOnTap,
-             hint: hint,
-             location: location,
-             radius: radius,
-             components: components,
-             language: language,
-             sessionToken: sessionToken,
-             types: types,
-             mode: mode,
-             strictbounds: strictbounds,
+             inputDecoration: decoration?.copyWith(errorText: state.errorText),
              onChanged: state.didChange,
+             leading: leading,
+             hint: hint,
+             trailing: trailing,
+             trailingOnTap: trailingOnTap,
+             mode: mode,
+             inputOffset: inputOffset,
+             locationBias: locationBias,
+             locationRestriction: locationRestriction,
+             origin: origin,
+             languageCode: languageCode,
+             regionCode: regionCode,
+             sessionToken: sessionToken,
+             includedPrimaryTypes: includedPrimaryTypes,
+             includedRegionCodes: includedRegionCodes,
+             onSelected: onSelected,
              onError: onError,
-             headers: headers,
              overlayBorderRadius: overlayBorderRadius,
              textStyle: textStyle,
              textStyleFormField: textStyleFormField,
            );
          },
        );
-
-  /// Controls the text being edited.
-  ///
-  /// If null, this widget will create its own [TextEditingController] and
-  /// initialize its [TextEditingController.text] with [initialValue].
-  final TextEditingController? controller;
-
   @override
   FormFieldState<String> createState() => _TextFormFieldState();
 }
@@ -155,6 +112,7 @@ class _TextFormFieldState extends FormFieldState<String> {
       if (widget.controller != null) {
         setValue(widget.controller!.text);
         if (oldWidget.controller == null) {
+          _controller?.dispose();
           _controller = null;
         }
       }
@@ -164,6 +122,7 @@ class _TextFormFieldState extends FormFieldState<String> {
   @override
   void dispose() {
     widget.controller?.removeListener(_handleControllerChanged);
+    _controller?.dispose();
     super.dispose();
   }
 

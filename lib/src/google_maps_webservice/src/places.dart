@@ -25,9 +25,7 @@ class GoogleMapsPlaces extends GoogleWebService {
     super.baseUrl,
     super.httpClient,
     super.apiHeaders,
-  }) : super(
-          apiPath: _placesUrl,
-        );
+  }) : super(apiPath: _placesUrl);
 
   Future<PlacesSearchResponse> searchNearbyWithRadius(
     Location location,
@@ -183,7 +181,8 @@ class GoogleMapsPlaces extends GoogleWebService {
   }) {
     if (radius != null && rankby != null) {
       throw ArgumentError(
-          "'rankby' must not be included if 'radius' is specified.");
+        "'rankby' must not be included if 'radius' is specified.",
+      );
     }
 
     if (rankby == 'distance' &&
@@ -191,7 +190,8 @@ class GoogleMapsPlaces extends GoogleWebService {
         type == null &&
         name == null) {
       throw ArgumentError(
-          "If 'rankby=distance' is specified, then one or more of 'keyword', 'name', or 'type' is required.");
+        "If 'rankby=distance' is specified, then one or more of 'keyword', 'name', or 'type' is required.",
+      );
     }
 
     final params = <String, String>{};
@@ -240,10 +240,7 @@ class GoogleMapsPlaces extends GoogleWebService {
       params['key'] = apiKey!;
     }
     return url
-        .replace(
-          path: '${url.path}$_nearbySearchUrl',
-          queryParameters: params,
-        )
+        .replace(path: '${url.path}$_nearbySearchUrl', queryParameters: params)
         .toString();
   }
 
@@ -259,9 +256,7 @@ class GoogleMapsPlaces extends GoogleWebService {
     String? language,
     String? region,
   }) {
-    final params = <String, String>{
-      'query': query,
-    };
+    final params = <String, String>{'query': query};
 
     if (minprice != null) {
       params['minprice'] = minprice.index.toString();
@@ -304,10 +299,7 @@ class GoogleMapsPlaces extends GoogleWebService {
     }
 
     return url
-        .replace(
-          path: '${url.path}$_textSearchUrl',
-          queryParameters: params,
-        )
+        .replace(path: '${url.path}$_textSearchUrl', queryParameters: params)
         .toString();
   }
 
@@ -354,10 +346,7 @@ class GoogleMapsPlaces extends GoogleWebService {
     }
 
     return url
-        .replace(
-          path: '${url.path}$_detailsSearchUrl',
-          queryParameters: params,
-        )
+        .replace(path: '${url.path}$_detailsSearchUrl', queryParameters: params)
         .toString();
   }
 
@@ -374,9 +363,7 @@ class GoogleMapsPlaces extends GoogleWebService {
     bool strictbounds = false,
     String? region,
   }) {
-    final params = <String, String>{
-      'input': input,
-    };
+    final params = <String, String>{'input': input};
 
     if (language != null) {
       params['language'] = language;
@@ -423,10 +410,7 @@ class GoogleMapsPlaces extends GoogleWebService {
     }
 
     return url
-        .replace(
-          path: '${url.path}$_autocompleteUrl',
-          queryParameters: params,
-        )
+        .replace(path: '${url.path}$_autocompleteUrl', queryParameters: params)
         .toString();
   }
 
@@ -437,9 +421,7 @@ class GoogleMapsPlaces extends GoogleWebService {
     num? radius,
     String? language,
   }) {
-    final params = <String, String>{
-      'input': input,
-    };
+    final params = <String, String>{'input': input};
 
     if (language != null) {
       params['language'] = language;
@@ -478,9 +460,7 @@ class GoogleMapsPlaces extends GoogleWebService {
       throw ArgumentError("You must supply 'maxWidth' or 'maxHeight'");
     }
 
-    final params = <String, String>{
-      'photoreference': photoReference,
-    };
+    final params = <String, String>{'photoreference': photoReference};
 
     if (maxWidth != null) {
       params['maxwidth'] = maxWidth.toString();
@@ -495,24 +475,24 @@ class GoogleMapsPlaces extends GoogleWebService {
     }
 
     return url
-        .replace(
-          path: '${url.path}$_photoUrl',
-          queryParameters: params,
-        )
+        .replace(path: '${url.path}$_photoUrl', queryParameters: params)
         .toString();
   }
 
   PlacesSearchResponse _decodeSearchResponse(Response res) =>
       PlacesSearchResponse.fromJson(
-          json.decode(res.body) as Map<String, dynamic>);
+        json.decode(res.body) as Map<String, dynamic>,
+      );
 
   PlacesDetailsResponse _decodeDetailsResponse(Response res) =>
       PlacesDetailsResponse.fromJson(
-          json.decode(res.body) as Map<String, dynamic>);
+        json.decode(res.body) as Map<String, dynamic>,
+      );
 
   PlacesAutocompleteResponse _decodeAutocompleteResponse(Response res) =>
       PlacesAutocompleteResponse.fromJson(
-          json.decode(res.body) as Map<String, dynamic>);
+        json.decode(res.body) as Map<String, dynamic>,
+      );
 }
 
 const _jsonSerializable = JsonSerializable(
@@ -936,10 +916,7 @@ class Term {
   final num offset;
   final String value;
 
-  const Term({
-    required this.offset,
-    required this.value,
-  });
+  const Term({required this.offset, required this.value});
 
   factory Term.fromJson(Map<String, dynamic> json) => _$TermFromJson(json);
   Map<String, dynamic> toJson() => _$TermToJson(this);
@@ -962,10 +939,7 @@ class MatchedSubstring {
   final num offset;
   final num length;
 
-  const MatchedSubstring({
-    required this.offset,
-    required this.length,
-  });
+  const MatchedSubstring({required this.offset, required this.length});
 
   factory MatchedSubstring.fromJson(Map<String, dynamic> json) =>
       _$MatchedSubstringFromJson(json);

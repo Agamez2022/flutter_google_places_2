@@ -7,48 +7,48 @@ part of 'core.dart';
 // **************************************************************************
 
 Location _$LocationFromJson(Map<String, dynamic> json) => Location(
-      lat: (json['lat'] as num).toDouble(),
-      lng: (json['lng'] as num).toDouble(),
-    );
+  lat: (json['lat'] as num).toDouble(),
+  lng: (json['lng'] as num).toDouble(),
+);
 
 Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
-      'lat': instance.lat,
-      'lng': instance.lng,
-    };
+  'lat': instance.lat,
+  'lng': instance.lng,
+};
 
 Geometry _$GeometryFromJson(Map<String, dynamic> json) => Geometry(
-      location: Location.fromJson(json['location'] as Map<String, dynamic>),
-      locationType: json['location_type'] as String?,
-      viewport: json['viewport'] == null
-          ? null
-          : Bounds.fromJson(json['viewport'] as Map<String, dynamic>),
-      bounds: json['bounds'] == null
-          ? null
-          : Bounds.fromJson(json['bounds'] as Map<String, dynamic>),
-    );
+  location: Location.fromJson(json['location'] as Map<String, dynamic>),
+  locationType: json['location_type'] as String?,
+  viewport: json['viewport'] == null
+      ? null
+      : Bounds.fromJson(json['viewport'] as Map<String, dynamic>),
+  bounds: json['bounds'] == null
+      ? null
+      : Bounds.fromJson(json['bounds'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$GeometryToJson(Geometry instance) => <String, dynamic>{
-      'location': instance.location.toJson(),
-      'location_type': instance.locationType,
-      'viewport': instance.viewport?.toJson(),
-      'bounds': instance.bounds?.toJson(),
-    };
+  'location': instance.location.toJson(),
+  'location_type': instance.locationType,
+  'viewport': instance.viewport?.toJson(),
+  'bounds': instance.bounds?.toJson(),
+};
 
 Bounds _$BoundsFromJson(Map<String, dynamic> json) => Bounds(
-      northeast: Location.fromJson(json['northeast'] as Map<String, dynamic>),
-      southwest: Location.fromJson(json['southwest'] as Map<String, dynamic>),
-    );
+  northeast: Location.fromJson(json['northeast'] as Map<String, dynamic>),
+  southwest: Location.fromJson(json['southwest'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$BoundsToJson(Bounds instance) => <String, dynamic>{
-      'northeast': instance.northeast.toJson(),
-      'southwest': instance.southwest.toJson(),
-    };
+  'northeast': instance.northeast.toJson(),
+  'southwest': instance.southwest.toJson(),
+};
 
 AddressComponent _$AddressComponentFromJson(Map<String, dynamic> json) =>
     AddressComponent(
       types:
           (json['types'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              [],
+          [],
       longName: json['long_name'] as String,
       shortName: json['short_name'] as String,
     );
@@ -60,14 +60,11 @@ Map<String, dynamic> _$AddressComponentToJson(AddressComponent instance) =>
       'short_name': instance.shortName,
     };
 
-_TravelMode _$TravelModeFromJson(Map<String, dynamic> json) => _TravelMode(
-      $enumDecode(_$TravelModeEnumMap, json['value']),
-    );
+_TravelMode _$TravelModeFromJson(Map<String, dynamic> json) =>
+    _TravelMode($enumDecode(_$TravelModeEnumMap, json['value']));
 
 Map<String, dynamic> _$TravelModeToJson(_TravelMode instance) =>
-    <String, dynamic>{
-      'value': _$TravelModeEnumMap[instance.value]!,
-    };
+    <String, dynamic>{'value': _$TravelModeEnumMap[instance.value]!};
 
 const _$TravelModeEnumMap = {
   TravelMode.driving: 'DRIVING',
@@ -76,14 +73,11 @@ const _$TravelModeEnumMap = {
   TravelMode.transit: 'TRANSIT',
 };
 
-_RouteType _$RouteTypeFromJson(Map<String, dynamic> json) => _RouteType(
-      $enumDecode(_$RouteTypeEnumMap, json['value']),
-    );
+_RouteType _$RouteTypeFromJson(Map<String, dynamic> json) =>
+    _RouteType($enumDecode(_$RouteTypeEnumMap, json['value']));
 
 Map<String, dynamic> _$RouteTypeToJson(_RouteType instance) =>
-    <String, dynamic>{
-      'value': _$RouteTypeEnumMap[instance.value]!,
-    };
+    <String, dynamic>{'value': _$RouteTypeEnumMap[instance.value]!};
 
 const _$RouteTypeEnumMap = {
   RouteType.tolls: 'tolls',
@@ -92,28 +86,20 @@ const _$RouteTypeEnumMap = {
   RouteType.indoor: 'indoor',
 };
 
-_Unit _$UnitFromJson(Map<String, dynamic> json) => _Unit(
-      $enumDecode(_$UnitEnumMap, json['value']),
-    );
+_Unit _$UnitFromJson(Map<String, dynamic> json) =>
+    _Unit($enumDecode(_$UnitEnumMap, json['value']));
 
 Map<String, dynamic> _$UnitToJson(_Unit instance) => <String, dynamic>{
-      'value': _$UnitEnumMap[instance.value]!,
-    };
-
-const _$UnitEnumMap = {
-  Unit.metric: 'metric',
-  Unit.imperial: 'imperial',
+  'value': _$UnitEnumMap[instance.value]!,
 };
 
+const _$UnitEnumMap = {Unit.metric: 'metric', Unit.imperial: 'imperial'};
+
 _TrafficModel _$TrafficModelFromJson(Map<String, dynamic> json) =>
-    _TrafficModel(
-      $enumDecode(_$TrafficModelEnumMap, json['value']),
-    );
+    _TrafficModel($enumDecode(_$TrafficModelEnumMap, json['value']));
 
 Map<String, dynamic> _$TrafficModelToJson(_TrafficModel instance) =>
-    <String, dynamic>{
-      'value': _$TrafficModelEnumMap[instance.value]!,
-    };
+    <String, dynamic>{'value': _$TrafficModelEnumMap[instance.value]!};
 
 const _$TrafficModelEnumMap = {
   TrafficModel.bestGuess: 'best_guess',
@@ -121,14 +107,11 @@ const _$TrafficModelEnumMap = {
   TrafficModel.optimistic: 'optimistic',
 };
 
-_TransitMode _$TransitModeFromJson(Map<String, dynamic> json) => _TransitMode(
-      $enumDecode(_$TransitModeEnumMap, json['value']),
-    );
+_TransitMode _$TransitModeFromJson(Map<String, dynamic> json) =>
+    _TransitMode($enumDecode(_$TransitModeEnumMap, json['value']));
 
 Map<String, dynamic> _$TransitModeToJson(_TransitMode instance) =>
-    <String, dynamic>{
-      'value': _$TransitModeEnumMap[instance.value]!,
-    };
+    <String, dynamic>{'value': _$TransitModeEnumMap[instance.value]!};
 
 const _$TransitModeEnumMap = {
   TransitMode.bus: 'bus',
@@ -139,16 +122,16 @@ const _$TransitModeEnumMap = {
 };
 
 _TransitRoutingPreferences _$TransitRoutingPreferencesFromJson(
-        Map<String, dynamic> json) =>
-    _TransitRoutingPreferences(
-      $enumDecode(_$TransitRoutingPreferencesEnumMap, json['value']),
-    );
+  Map<String, dynamic> json,
+) => _TransitRoutingPreferences(
+  $enumDecode(_$TransitRoutingPreferencesEnumMap, json['value']),
+);
 
 Map<String, dynamic> _$TransitRoutingPreferencesToJson(
-        _TransitRoutingPreferences instance) =>
-    <String, dynamic>{
-      'value': _$TransitRoutingPreferencesEnumMap[instance.value]!,
-    };
+  _TransitRoutingPreferences instance,
+) => <String, dynamic>{
+  'value': _$TransitRoutingPreferencesEnumMap[instance.value]!,
+};
 
 const _$TransitRoutingPreferencesEnumMap = {
   TransitRoutingPreferences.lessWalking: 'less_walking',

@@ -1,4 +1,4 @@
-library flutter_google_places_2;
+//library flutter_google_places_2;
 
 export 'src/flutter_google_places.dart';
 export 'src/places_autocomplete_field.dart';

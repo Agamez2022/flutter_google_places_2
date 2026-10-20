@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'google_maps_webservice/places.dart';
 
 import 'flutter_google_places.dart';
@@ -170,31 +171,32 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
       widget.controller!.text = oldWidget.controller!.text;
     }
     if (widget.controller == null && oldWidget.controller != null) {
-      _controller =
-          TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller = TextEditingController.fromValue(
+        oldWidget.controller!.value,
+      );
     } else if (widget.controller != null && oldWidget.controller == null) {
       _controller = null;
     }
   }
 
   Future<Prediction?> _showAutocomplete() async => PlacesAutocomplete.show(
-        context: context,
-        apiKey: widget.apiKey,
-        offset: widget.offset,
-        onError: widget.onError,
-        mode: widget.mode,
-        hint: widget.hint,
-        language: widget.language,
-        sessionToken: widget.sessionToken,
-        components: widget.components,
-        location: widget.location,
-        radius: widget.radius,
-        types: widget.types,
-        strictbounds: widget.strictbounds,
-        headers: widget.headers,
-        overlayBorderRadius: widget.overlayBorderRadius,
-        textStyle: widget.textStyle,
-      );
+    context: context,
+    apiKey: widget.apiKey,
+    offset: widget.offset,
+    onError: widget.onError,
+    mode: widget.mode,
+    hint: widget.hint,
+    language: widget.language,
+    sessionToken: widget.sessionToken,
+    components: widget.components,
+    location: widget.location,
+    radius: widget.radius,
+    types: widget.types,
+    strictbounds: widget.strictbounds,
+    headers: widget.headers,
+    overlayBorderRadius: widget.overlayBorderRadius,
+    textStyle: widget.textStyle,
+  );
 
   void _handleTap() async {
     final p = await _showAutocomplete();
@@ -220,35 +222,30 @@ class _LocationAutocompleteFieldState extends State<PlacesAutocompleteField> {
         ? Text(
             controller.text,
             softWrap: true,
-            style: widget.textStyleFormField ??
+            style:
+                widget.textStyleFormField ??
                 const TextStyle(color: Colors.black38),
           )
         : Text(
             widget.hint ?? '',
-            style: widget.textStyleFormField ??
+            style:
+                widget.textStyleFormField ??
                 const TextStyle(color: Colors.black38),
           );
 
     Widget child = Row(
       children: <Widget>[
         widget.leading ?? const SizedBox(),
-        const SizedBox(
-          width: 16.0,
-        ),
-        Expanded(
-          child: text,
-        ),
+        const SizedBox(width: 16.0),
+        Expanded(child: text),
         widget.trailing != null
             ? GestureDetector(
                 onTap: widget.trailingOnTap,
                 child: widget.trailingOnTap != null
                     ? widget.trailing!
-                    : Icon(
-                        widget.trailing!.icon,
-                        color: Colors.grey,
-                      ),
+                    : Icon(widget.trailing!.icon, color: Colors.grey),
               )
-            : const SizedBox()
+            : const SizedBox(),
       ],
     );
 

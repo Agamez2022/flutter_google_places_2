@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'google_maps_webservice/places.dart';
 
 import 'flutter_google_places.dart';
@@ -69,42 +70,45 @@ class PlacesAutocompleteFormField extends FormField<String> {
     BorderRadius? overlayBorderRadius,
     TextStyle? textStyle,
     TextStyle? textStyleFormField,
-  })  : assert(initialValue == null || controller == null),
-        super(
-          initialValue:
-              controller != null ? controller.text : (initialValue ?? ''),
-          builder: (FormFieldState<String> field) {
-            final state = field as _TextFormFieldState;
-            final effectiveDecoration = inputDecoration
-                ?.applyDefaults(Theme.of(state.context).inputDecorationTheme);
-            return PlacesAutocompleteField(
-              key: key,
-              inputDecoration:
-                  effectiveDecoration?.copyWith(errorText: state.errorText),
-              controller: state._effectiveController,
-              apiKey: apiKey,
-              leading: leading,
-              trailing: trailing,
-              offset: offset,
-              trailingOnTap: trailingOnTap,
-              hint: hint,
-              location: location,
-              radius: radius,
-              components: components,
-              language: language,
-              sessionToken: sessionToken,
-              types: types,
-              mode: mode,
-              strictbounds: strictbounds,
-              onChanged: state.didChange,
-              onError: onError,
-              headers: headers,
-              overlayBorderRadius: overlayBorderRadius,
-              textStyle: textStyle,
-              textStyleFormField: textStyleFormField,
-            );
-          },
-        );
+  }) : assert(initialValue == null || controller == null),
+       super(
+         initialValue: controller != null
+             ? controller.text
+             : (initialValue ?? ''),
+         builder: (FormFieldState<String> field) {
+           final state = field as _TextFormFieldState;
+           final effectiveDecoration = inputDecoration?.applyDefaults(
+             Theme.of(state.context).inputDecorationTheme,
+           );
+           return PlacesAutocompleteField(
+             key: key,
+             inputDecoration: effectiveDecoration?.copyWith(
+               errorText: state.errorText,
+             ),
+             controller: state._effectiveController,
+             apiKey: apiKey,
+             leading: leading,
+             trailing: trailing,
+             offset: offset,
+             trailingOnTap: trailingOnTap,
+             hint: hint,
+             location: location,
+             radius: radius,
+             components: components,
+             language: language,
+             sessionToken: sessionToken,
+             types: types,
+             mode: mode,
+             strictbounds: strictbounds,
+             onChanged: state.didChange,
+             onError: onError,
+             headers: headers,
+             overlayBorderRadius: overlayBorderRadius,
+             textStyle: textStyle,
+             textStyleFormField: textStyleFormField,
+           );
+         },
+       );
 
   /// Controls the text being edited.
   ///
@@ -144,8 +148,9 @@ class _TextFormFieldState extends FormFieldState<String> {
       widget.controller?.addListener(_handleControllerChanged);
 
       if (oldWidget.controller != null && widget.controller == null) {
-        _controller =
-            TextEditingController.fromValue(oldWidget.controller!.value);
+        _controller = TextEditingController.fromValue(
+          oldWidget.controller!.value,
+        );
       }
       if (widget.controller != null) {
         setValue(widget.controller!.text);

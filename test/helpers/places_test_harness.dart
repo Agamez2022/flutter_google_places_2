@@ -19,12 +19,13 @@ class PlacesHarness {
     identityHeaders: () async => {},
   );
 
-  Future<Object?> open(BuildContext context, Mode mode) =>
+  Future<Object?> open(BuildContext context, Mode mode, {Widget? logo}) =>
       PlacesAutocomplete.show(
         context: context,
         client: client,
         mode: mode,
         hint: 'Buscar',
+        logo: logo,
         sessionToken: 'synthetic-session',
         overlayBorderRadius: BorderRadius.circular(8),
         textStyle: const TextStyle(fontSize: 16),

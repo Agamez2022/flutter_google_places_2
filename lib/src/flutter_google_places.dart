@@ -143,7 +143,12 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
         widget.overlayBorderRadius?.bottomRight ?? const Radius.circular(2);
 
     final container = Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 30.0),
+      margin: EdgeInsets.fromLTRB(
+        16.0,
+        30.0,
+        16.0,
+        30.0 + MediaQuery.viewInsetsOf(context).bottom,
+      ),
       child: Stack(
         children: <Widget>[
           header,
@@ -175,26 +180,34 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
                     child: widget.logo ?? const PoweredByGoogleImage(),
                   );
                 } else {
-                  return SingleChildScrollView(
-                    child: Material(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: bodyBottomLeftBorderRadius,
-                        bottomRight: bodyBottomRightBorderRadius,
-                      ),
-                      color:
-                          theme.dialogTheme.backgroundColor ??
-                          theme.colorScheme.surface,
-                      child: ListBody(
-                        children: response.placePredictions
-                            .map(
-                              (p) => PredictionTile(
-                                prediction: p,
-                                onTap: _selectPrediction,
-                                resultTextStyle: widget.resultTextStyle,
-                              ),
-                            )
-                            .toList(growable: false),
-                      ),
+                  return Material(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: bodyBottomLeftBorderRadius,
+                      bottomRight: bodyBottomRightBorderRadius,
+                    ),
+                    color:
+                        theme.dialogTheme.backgroundColor ??
+                        theme.colorScheme.surface,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: SingleChildScrollView(
+                            child: ListBody(
+                              children: response.placePredictions
+                                  .map(
+                                    (p) => PredictionTile(
+                                      prediction: p,
+                                      onTap: _selectPrediction,
+                                      resultTextStyle: widget.resultTextStyle,
+                                    ),
+                                  )
+                                  .toList(growable: false),
+                            ),
+                          ),
+                        ),
+                        widget.logo ?? const PoweredByGoogleImage(),
+                      ],
                     ),
                   );
                 }
@@ -298,10 +311,17 @@ class PlacesAutocompleteResult extends StatelessWidget {
             ],
           );
         }
-        return PredictionsListView(
-          predictions: response.placePredictions,
-          onTap: onTap,
-          resultTextStyle: resultTextStyle,
+        return Column(
+          children: [
+            Expanded(
+              child: PredictionsListView(
+                predictions: response.placePredictions,
+                onTap: onTap,
+                resultTextStyle: resultTextStyle,
+              ),
+            ),
+            SafeArea(top: false, child: logo ?? const PoweredByGoogleImage()),
+          ],
         );
       },
     );

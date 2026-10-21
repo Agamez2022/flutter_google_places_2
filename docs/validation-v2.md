@@ -1,60 +1,73 @@
 # Validación de Places New v2
 
-Fecha: 2026-10-20. **Entrega local completada en el checkout del fork** C:/Users/Usuario/Documents/GitHub/flutter_google_places_2, versión 2.0.0. La app consumidora no se modificó ni se activó. Cambios sin stage, commit ni push; HEAD permanece en fd99ecd7d3fe992823b18fc1ab69243dcc09ad63.
+## Checkpoint vigente: corrección de atribución
 
-## Resultado local
+Fecha: 2026-10-20. Checkout: C:/Users/Usuario/Documents/GitHub/flutter_google_places_2. Base verificada: HEAD 079cdc1429f89579a35287f75c02300fdc8ebb1c (Update to Places (New)), main, limpio antes de esta intervención. Versión 2.0.0 conservada. La corrección descrita aquí queda local, sin stage, commit, push ni publicación. La app consumidora no se modificó.
+
+Se corrigió el logo que desaparecía cuando llegaban predicciones en overlay y fullscreen. Ahora queda fuera de la lista desplazable. El overlay descuenta el teclado y fullscreen protege el pie con SafeArea. Se conserva el widget/asset existente y el parámetro logo; no cambian cliente HTTP, modelos, filtros, sesiones, selección ni mensajes de error. No se agregaron dependencias ni se cambiaron pubspec.yaml, pubspec.lock o archivos generados.
+
+La [política oficial de atribución](https://developers.google.com/maps/documentation/places/web-service/policies) exige que ésta permanezca visible junto al contenido. Permite temporalmente mantener la marca Google en implementaciones existentes; por eso se reutilizan los assets Legacy para preservar su apariencia. Google recomienda Google Maps para nuevas implementaciones. El consumidor que sustituya logo debe proporcionar una atribución válida y legible.
+
+## Resultado local actual
 
 Entorno: Windows, Flutter 3.47.7 estable / Dart 3.13.5.
 
 | Comprobación | Resultado |
 | --- | --- |
-| Suite completa en el fork real | 77/77, real-final-tests.log |
-| Dart MCP applyFixes:false, lib/test/example/lib | No errors, real-mcp-final.log |
-| Generación con json_serializable 6.15.2 | Correcta, real-codegen.log |
-| Formato Dart | 24 archivos, 0 cambios pendientes |
-| pub get y pub outdated | Correctos; sólo dos transitivas fijadas por Flutter |
-| diff --check | Sin errores |
-| Doce referencias visuales Legacy | Comparación aprobada sin regenerar; hashes originales conservados |
+| Regresión antes del cambio | 8/8 fallan por atribución ausente, red.log |
+| Teclado y área del sistema | Regresiones adicionales detectaron ocultamiento; corregido |
+| Suite completa final | 93/93, exit 0, full-final-tests.log y test-result.json |
+| Nuevas regresiones | 16 combinaciones: ambos modos, temas, logos predeterminado/personalizado, teclado abierto/cerrado y barra del sistema; desplazamiento y selección final |
+| Dart MCP applyFixes:false, lib/test/example/lib | No errors, invocado antes y después de editar |
+| Formato Dart | 25 archivos, 0 cambios pendientes |
+| git diff --check | Sin errores |
+| Referencias visuales | 8 de vacío/carga intactas por SHA256; sólo 4 de resultados actualizadas tras inspección visual |
+| Dependencias y configuración | SHA256 idénticos a la base, incluidas las fuentes generadas |
+| Git | HEAD e índice conservados; cambios locales revisables |
 
-Las dependencias directas están en las últimas versiones compatibles consultadas al cerrar. material_color_utilities 0.13.0 frente a 0.13.1 y test_api 0.7.12 frente a 0.7.15 están fijadas por el SDK; comentarios en pubspec explican el límite. meta pasó a transitiva al retirar el transporte Legacy. No se agregaron dependencias.
+Evidencia de esta corrección: build/attribution-validation/ en este fork (directorio ignorado por Git). Incluye baseline.json, goldens-before/, golden-differences/, intentos RED/GREEN, log final completo, resultado con fecha, logs de formato/MCP/diff y manifiesto de integridad. El primer intento de --update-goldens falló por acceso denegado al escribir desde el proceso de pruebas; no se cambiaron ACL. Se guardaron explícitamente las cuatro imágenes reales ya generadas e inspeccionadas, conservando originales/diferencias, y se repitió la suite completa sin --update-goldens con éxito. No se ocultaron fallos ni se regeneraron las otras ocho referencias.
 
-## Cobertura y revisión
+Los bloques negros del texto en los goldens corresponden a la fuente Ahem determinista del entorno de pruebas. No certifican tipografía ni dispositivo real. Los logos e iconos son assets reales.
 
-HTTP sintético: Autocomplete/Query Predictions, Details con máscaras parciales, Nearby, Text Search/paginación y Photos/atribuciones/recurso vencido; identidad Android/iOS compartida, prefijo de proxy, propiedad del cliente y redirecciones deshabilitadas. Errores 400/403/404/429/500, transporte, identidad, JSON inválido y claves redactadas. Validaciones locales no emiten HTTP.
+## Cobertura conservada
 
-Widgets: overlay/fullscreen, claro/oscuro, vacío/carga/resultados, logo e iconos reales, foco/teclado sintético, selección/cancelar, token único por apertura y compartido con Details, cursor Unicode, respuestas fuera de orden, cierre con HTTP pendiente, controladores internos/externos, reset/validator y selección tras desmontar. Los goldens usan 400x800 y Ahem determinista; no certifican fuentes ni dispositivos reales.
+Las 77 pruebas de la base siguen pasando: Autocomplete/Query Predictions, Details con máscaras parciales, Nearby, Text Search/paginación y Photos; identidad Android/iOS compartida, proxy, propiedad del cliente y redirecciones deshabilitadas. Incluyen errores HTTP/transporte/identidad/JSON y redacción de claves; validaciones locales sin HTTP.
 
-Revisor independiente con contexto fresco: /root/places_v2_final_review, gpt-6-astra/high. Detectó tres hallazgos importantes, corregidos en una pasada con diez regresiones RED antes del cambio y GREEN posterior:
+Widgets: selección/cancelar, foco, token por apertura compartido con Details, cursor Unicode, respuestas fuera de orden, invalidación inmediata de filas, cierre con HTTP pendiente o durante la transición, controladores internos/externos, reset/validator, selección tras desmontar y coordenadas parciales sin fabricar cero. La revisión anterior del paquete corrigió esos casos; el fallo de atribución descubierto al revisar el commit actual queda cubierto por las 16 regresiones de esta intervención.
 
-- Fin de sesión inmediato al pop, incluyendo animación de salida, botón, sistema y barrera.
-- Filas invalidadas al editar; debounce únicamente para HTTP y selección protegida por generación/consulta.
-- Componentes de coordenadas nullable en respuestas con máscaras anidadas; solicitudes exigen coordenadas completas, finitas y en rango. Nunca se fabrica cero. Ejemplo probado con ubicación completa, ausente y parcial.
+La generación con json_serializable y la resolución de dependencias fueron verificadas en la entrega anterior, no se repitieron aquí porque esta corrección no modifica modelos ni dependencias. No se afirma que las versiones sigan siendo las últimas disponibles. La evidencia histórica anterior está en appfloridomobile/build/places-new-v2-evidence y build/places-new-recheck-20261020; la tabla anterior y build/attribution-validation son el cierre local vigente.
 
-Resultado posterior: 13/13 focales y 77/77 completos. No quedaron hallazgos locales pendientes. Se retiraron seis archivos Legacy; ningún método público conserva llamadas a esos endpoints.
-
-La copia al fork verificó HEAD y hashes previos antes de escribir, y comprobó los archivos aplicados. Se conservaron los documentos aprobados, pruebas, ejemplo y doce goldens. Logs, hashes y ledger están en appfloridomobile/build/places-new-v2-evidence.
-
-## Reproducción
+## Comandos y reproducción
 
 ~~~sh
-flutter pub get --no-example
-flutter pub outdated --json
-dart run build_runner build
-flutter test --no-pub
+flutter test --no-pub test/places_attribution_test.dart --reporter expanded
+flutter test --no-pub --reporter expanded
 dart format --output=none --set-exit-if-changed lib test example
 git diff --check
 ~~~
 
-Ejecutar además Dart MCP analyze_files(applyFixes:false) con URIs file: completas de lib, test y example/lib. Los .g.dart se generan; no se editan manualmente. No usar --update-goldens para aceptar diferencias de la migración.
+Ejecutar también Dart MCP analyze_files(applyFixes:false) sobre lib, test y example/lib con el URI file:///C:/Users/Usuario/Documents/GitHub/flutter_google_places_2. No usar --update-goldens al verificar; las cuatro referencias actuales ya incluyen la atribución. No editar .g.dart manualmente.
 
-## Pendientes externos antes de activar una app
+## SHA256 de los archivos funcionales afectados
 
-No se hicieron solicitudes reales a Google ni cambios de claves/Cloud. DTD no tiene una app debug conectada para recargar el fork. No se certificaron APK, Android real, iOS, Web/CORS ni proxy desplegado.
+| Archivo | SHA256 |
+| --- | --- |
+| lib/src/flutter_google_places.dart | 09C58BDD936D7D10299EE398CA42E9407F6A28E9054449A15C76007A77FE9647 |
+| test/helpers/places_test_harness.dart | 5A6AD4B35CDFCEE57882B6B7247264D55545F82C175AD83A47AF632C7AFE1BF8 |
+| test/places_attribution_test.dart | 81E660C2638ECF2B810628D8B383F7A68204FE01A337D3DC8226C474F1724BAD |
+| test/goldens/places/overlay-light-results.png | 2282B699CBC8A785F8175EE75033C506D4311BEBCA5048C1C6D2D1DE0AC3CEF6 |
+| test/goldens/places/overlay-dark-results.png | A13DC668B2A84F17711A8E9777234FD91F69E24E1EBFD6A72F976468D015FEBA |
+| test/goldens/places/fullscreen-light-results.png | 79EB2833BDC330936C3DF39F3A0239029C6EC5FCAA7F6B3C08118421D77D48E0 |
+| test/goldens/places/fullscreen-dark-results.png | 3AC44DB84D6B1071C76E6E853092071E129F7ED0B969B21B4D8E7420B7C08DA3 |
 
-1. Verificar Places API (New) habilitada, proyecto, facturación/cuotas y API autorizada en las restricciones de clave.
-2. Inspeccionar el certificado efectivo del APK. En Autocomplete y Details comprobar éxito con identidad correcta y rechazo con paquete incorrecto y certificado incorrecto, sin registrar claves. Los mocks no prueban restricciones remotas; si no se cumplen, revisar proxy autenticado o integración nativa antes de activar conexión directa.
-3. Verificar Search/Photos reales si se usan, atribuciones y recursos caducados.
-4. Comparar direcciones de Tijuana/alrededores, edificios/interiores, colonias y sin número. street_address es candidato, no equivalencia demostrada de address. El ejemplo usa radio explícito 50000; 71450 se rechaza.
-5. Confirmar apariencia, teclado, cancelar/seleccionar y actualización de marcador/cámara en Android. iOS, Web/origen/CORS y proxy requieren comprobaciones propias.
+## Pendientes externos antes de activar la app
 
-La siguiente intervención es adaptar sites_maps.dart y actualizar la referencia Git de la app después del commit/push manual del usuario. Esta entrega se detiene antes de modificar esa app.
+No se hicieron solicitudes reales a Google ni cambios de claves/Cloud. Los tres DTD encontrados se conectaron sin apps activas; el intento de hot reload devolvió No active app connection. No se presenta una recarga ni una ejecución móvil como realizada. No se certificaron APK/AAB, Android real, iOS, Web/CORS ni proxy desplegado desde este paquete.
+
+1. Verificar Places API (New) habilitada, proyecto, facturación/cuotas y restricciones de clave.
+2. Inspeccionar el certificado efectivo del APK. En Autocomplete y Details comprobar éxito con identidad correcta y rechazo con paquete incorrecto y certificado incorrecto, sin registrar claves. Los mocks no prueban restricciones remotas. Si no se cumplen, revisar proxy autenticado o integración nativa antes de activar conexión directa.
+3. Verificar Search/Photos reales y atribuciones de autor si se usan; la app consumidora debe mostrar los créditos exigidos.
+4. Comparar direcciones de Tijuana/alrededores, edificios/interiores, colonias y sin número. street_address no demuestra equivalencia con address. El radio 71450 no es válido en Places New; el máximo aceptado es 50000.
+5. Confirmar apariencia, teclado, desplazamiento, cancelar/seleccionar y marcador/cámara en Android. iOS, Web/origen/CORS y proxy requieren comprobaciones propias.
+
+Siguiente paso: integrar la API Dart v2 en la app, ajustar sites_maps.dart y actualizar su referencia Git cuando el usuario disponga de estos cambios en el remoto. Esta intervención se detiene antes de modificar esa app. Los resultados locales no equivalen a aceptación de Google Play.

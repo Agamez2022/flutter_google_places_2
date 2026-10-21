@@ -42,6 +42,8 @@ El [ejemplo completo de selección](example/lib/places_picker.dart) incluye rest
 
 Funciones disponibles: Autocomplete, Query Predictions, Details, Nearby Search, Text Search y Photo Media. Los widgets sólo seleccionan lugares y conservan overlay/fullscreen, foco, estilos, márgenes y carga. No consultan Details automáticamente.
 
+La atribución se mantiene visible debajo de las predicciones, fuera del desplazamiento, en ambos modos. El overlay respeta el espacio del teclado y el pie fullscreen respeta el área del sistema. Si proporcionas `logo`, debes conservar una atribución válida y legible de Google; no lo uses para ocultarla. Este ajuste corrige la presentación anterior sin cambiar selección, transporte ni mensajes de error.
+
 Lee la [guía de migración v2](docs/migration-v2.md) antes de actualizar una aplicación. Los campos solicitados afectan la facturación; la clave/proyecto debe tener habilitada Places API (New). Referencias: [Autocomplete](https://developers.google.com/maps/documentation/places/web-service/place-autocomplete), [Details](https://developers.google.com/maps/documentation/places/web-service/place-details) y [sesiones](https://developers.google.com/maps/documentation/places/web-service/using-session-tokens).
 
 La validación local usa respuestas sintéticas y comparaciones visuales. La [validación documentada](docs/validation-v2.md) distingue estos resultados de las comprobaciones pendientes contra Google y en dispositivos.
